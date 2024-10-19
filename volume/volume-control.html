@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Volume Control</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333;
+        }
+
+        #volume-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        #sound-icon {
+            width: 100px;
+            cursor: pointer;
+            transition: transform 0.5s ease; /* Smooth transform */
+            position: relative;
+            left: -450px; /* Move the speaker to the left */
+            background: none; /* Remove any background */
+            border: none; /* Remove any border */
+            padding: 0; /* Remove padding */
+            display: block;
+            outline: white;
+        }
+
+        #volume-line {
+            margin-top: 20px;
+            background-color: #000000;
+            border-radius: 5px;
+            height: 10px;
+            width: 600px;
+            position: relative;
+            left: 20px; /* Move the bar slightly to the right */
+        }
+
+        #ball {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: rgb(255, 127, 0);
+            transform: translate(-50%, -50%);
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="volume-control">
+        <img id="sound-icon" src="sound-icon.png" alt="Sound Icon" />
+        <div id="volume-line"></div>
+        <div id="ball" class="ball"></div> <!-- Ball element -->
+    </div>
+
+    <audio id="audio-player" src="soundtest.mp3" preload="auto"></audio>
+
+    <script>
+        const soundIcon = document.getElementById('sound-icon');
+        const ball = document.getElementById('ball');
+        const audioPlayer = document.getElementById('audio-player');
+        let chargingTime = 0;
+        let chargingInterval;
+
+        soundIcon.addEventListener('mousedown', startCharging);
+        soundIcon.addEventListener('mouseup', launchBall);
+
+        function startCharging() {
+            chargingTime = 0;
+            soundIcon.style.transform = 'rotate(-50deg)'; // Tilt the icon upwards when pressed
+            chargingInterval = setInterval(() => {
+                chargingTime += 100; // Increase time while holding the icon
+            }, 100);
+        }
+
+        function launchBall() {
+            clearInterval(chargingInterval); // Stop charging when released
+            const initialX = soundIcon.offsetLeft + soundIcon.offsetWidth / 2; // Icon center X
+            const initialY = soundIcon.offsetTop; // Icon Y position
+            ball.style.left = `${initialX}px`;
+            ball.style.top = `${initialY}px`;
+            ball.style.display = 'block'; // Show the ball
+
+            const launchAngle = 45; // Set launch angle to 60 degrees
+            moveBall(initialX, initialY, launchAngle); // Pass angle to moveBall
+
+            // Reset the icon back to its original position after launching the ball
+            setTimeout(() => {
+                soundIcon.style.transform = 'rotate(0deg)'; // Reset the icon
+            }, 300); // Adjust the delay as needed
+        }
+
+        function moveBall(initialX, initialY, angleInDegrees) {
+            const gravity = 0.4; // Gravity value
+            const angleInRadians = angleInDegrees * (Math.PI / 180); // Convert degrees to radians
+
+            let initialSpeed = chargingTime / 30; // Adjust speed as needed
+            if (initialSpeed < 1) initialSpeed = 1; // Ensure minimum speed
+
+            let velocityX = initialSpeed * Math.cos(angleInRadians); // Horizontal velocity
+            let velocityY = -initialSpeed * Math.sin(angleInRadians); // Vertical velocity
+
+            let posX = initialX; // Start position on X
+            let posY = initialY; // Start position on Y
+
+            const volumeLineWidth = 800; // Change this to match the new volume line width
+
+            const interval = setInterval(() => {
+                posX += velocityX; // Update horizontal position
+                posY += velocityY; // Update vertical position
+                velocityY += gravity; // Apply gravity
+
+                // Update ball position
+                drawBall(posX, posY); // Call drawBall with current position
+
+                // Check for collision with volume line
+                if (posY >= (initialY + 120) && posX <= (initialX + volumeLineWidth)) { // Adjust to your volume line height
+                    clearInterval(interval); // Stop animation
+                    posY = initialY + 120; // Set ball position to volume line
+                    drawBall(posX, posY); // Draw the ball at the new position
+                    updateVolume(posX); // Update volume based on landing position
+                    audioPlayer.currentTime = 0; // Reset audio to start
+                    audioPlayer.play(); // Play audio
+                }
+            }, 30);
+        }
+
+        function drawBall(x, y) {
+            ball.style.left = `${x}px`; // Update ball's left position
+            ball.style.top = `${y}px`; // Update ball's top position
+        }
+
+        function updateVolume(landingPosition) {
+            const volumeLineWidth = 800; // Update this to the same value as the CSS width
+            const volumePercent = Math.min(Math.max((landingPosition - 20) / volumeLineWidth, 0), 1); // Ensure between 0 and 1
+            audioPlayer.volume = volumePercent; // Set the audio player's volume
+            console.log(`Volume: ${(volumePercent * 100).toFixed(0)}%`); // Log the volume percentage
+        }
+    </script>
+</body>
+
+</html>
