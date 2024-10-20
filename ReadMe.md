@@ -1,3 +1,1 @@
-# demo 
-
-first repository!
+development of my web page/website
