@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    border: 10px solid transparent;
+    box-shadow: 0 0 0 10px transparent;
+    background: linear-gradient(45deg, #1c1c1c, #00504e, #002275, #5e2401, #141414);
+    overflow: hidden;
+    transition: background 0.5s ease;
+}
+
+/* Gradient border */
+#board::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(-90deg, #aae9e9, #f7e0e0);
+    border-radius: 20px;
+    z-index: -1;
+}
+
+#volume-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    bottom: 10px;
+    left: 1390px;
+    transform: scale(0.30);
+    transform-origin: bottom left;
+}
+
+#sound-icon {
+    width: 100px;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+    position: relative;
+    left: -210px;
+}
+
+#volume-line {
+    margin-top: 20px;
+    background-color: #000000;
+    border-radius: 5px;
+    height: 10px;
+    width: 400px;
+}
+
+#ball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(0, 0, 0);
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+#board {
+    width: 650px;
+    height: 500px;
+    border-radius: 20px;
+    background: linear-gradient(-90deg, #464646, #9f9f9f);
+    position: relative;
+    transition: transform 0.1s;
+    transform-style: preserve-3d;
+    overflow: hidden;
+}
+
+/* Dark/Light mode toggle icon */
+#mode-toggle {
+    position: fixed;
+    top: 12px;
+    left: 1482px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+/* Text container */
+#scrollingText {
+    position: absolute;
+    top: 20px;
+    white-space: nowrap;
+    animation: scroll 7s linear infinite;
+    font-size: 20px;
+    color: #000;
+    width: 100%;
+}
+
+/* Scrolling animation */
+@keyframes scroll {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

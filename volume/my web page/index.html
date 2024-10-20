@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Volume Control with Test Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="volume-control">
+        <img id="sound-icon" src="sound-icon.png" alt="Sound Icon" />
+        <div id="volume-line"></div>
+        <div id="ball" class="ball"></div>
+    </div>
+
+    <div id="board">
+        <div id="scrollingText"></div>
+    </div>
+
+    <audio id="audio-player" src="soundtest.mp3" preload="auto"></audio>
+
+    <!-- Mode toggle icon -->
+    <img id="mode-toggle" src="darkmode.png" alt="Toggle Mode" />
+
+    <script src="script.js"></script>
+</body>
+
+</html>
